@@ -1,0 +1,1 @@
+export { CadastroProduto } from "./cadastro";
