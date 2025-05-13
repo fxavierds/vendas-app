@@ -50,14 +50,21 @@ export const CadastroProduto: React.FC = () => {
         />
       </div>
       <div className="columns">
-        <Input
-          id="inputDesc"
-          label="Descriçao: *"
-          columnClasses="is-half"
-          onChange={setNome}
-          value={preco}
-          placeholder="Digite a descrição detalhada do produto"
-        />
+        <div className="field column is-full">
+          <label className="label" htmlFor="inputDesc">
+            Descrição: *
+          </label>
+          <div className="control">
+            <textarea
+              className="textarea is-fullwidth"
+              rows={6}
+              value={descricao}
+              onChange={(event) => setDescricao(event.target.value)}
+              id="inputDesc"
+              placeholder="Digite a descrição detalhada do produto"
+            />
+          </div>
+        </div>
       </div>
       <div className="field is-grouped">
         <div className="control">
