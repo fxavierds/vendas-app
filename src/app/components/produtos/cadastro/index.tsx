@@ -11,6 +11,8 @@ export const CadastroProduto: React.FC = () => {
   const [preco, setPreco] = useState("");
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [id, setId] = useState<string>("");
+  const [cadastro, setCadastro] = useState<string>("");
 
   const submit = () => {
     const produto: Produto = {
@@ -18,14 +20,33 @@ export const CadastroProduto: React.FC = () => {
       nome,
       preco: parseFloat(preco),
       descricao,
+      cadastro,
     };
-    servvice
-      .salvar(produto)
-      .then((produtoResposta) => console.log(produtoResposta));
+    servvice.salvar(produto).then((produtoResposta) => {
+      console.log("retorno", produtoResposta);
+      setId(produtoResposta.id ?? "");
+      setCadastro(produtoResposta.cadastro ?? "");
+    });
   };
 
   return (
     <Layout titulo="Cadastro de Produtos">
+      <div className="columns">
+        <Input
+          id="inputId"
+          label="Código"
+          columnClasses="is-half"
+          value={id}
+          disabled
+        />
+        <Input
+          id="inputCadastro"
+          label="Data de Cadastro"
+          columnClasses="is-half"
+          value={cadastro}
+          disabled
+        />
+      </div>
       <div className="columns">
         <Input
           id="inputSku"
@@ -50,7 +71,7 @@ export const CadastroProduto: React.FC = () => {
           label="Nome: *"
           columnClasses="is-half"
           onChange={setNome}
-          value={preco}
+          value={nome}
           placeholder="Digite o Nome"
         />
       </div>

@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from "react";
 
 interface inputProps extends InputHTMLAttributes<HTMLElement> {
   id: string;
-  onChange?: (value) => void;
+  onChange?: (value: any) => void;
   label: string;
   columnClasses?: string;
 }
@@ -24,6 +24,7 @@ export const Input: React.FC<inputProps> = ({
         <input
           className="input"
           id={id}
+          value={value}
           {...inputProps}
           onChange={(event) => {
             if (onChange) {
