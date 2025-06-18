@@ -10,7 +10,12 @@ export const useProdutoService = () => {
         return response.data;
     }
 
+    const atualizar = async (produto: Produto): Promise<void> => {
+        const url: string = `${resourceUrl}/${produto.id}`;
+        await httpClient.put(url, produto);
+    }
+
     return {
-        salvar
+        salvar, atualizar
     }
 }

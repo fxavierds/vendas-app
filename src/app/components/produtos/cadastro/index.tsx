@@ -4,6 +4,7 @@ import { Layout } from "app/components/layout";
 import { Input } from "app/components/common";
 import { useProdutoService } from "app/services/produto.service";
 import { Produto } from "app/models/produtos";
+import { convertBigEmDecimal } from "app/util/money";
 
 export const CadastroProduto: React.FC = () => {
   const servvice = useProdutoService();
@@ -16,37 +17,45 @@ export const CadastroProduto: React.FC = () => {
 
   const submit = () => {
     const produto: Produto = {
+      id,
       sku,
       nome,
-      preco: parseFloat(preco),
+      preco: convertBigEmDecimal(preco),
       descricao,
       cadastro,
     };
-    servvice.salvar(produto).then((produtoResposta) => {
-      console.log("retorno", produtoResposta);
-      setId(produtoResposta.id ?? "");
-      setCadastro(produtoResposta.cadastro ?? "");
-    });
+
+    if (id) {
+      servvice.atualizar(produto).then((response) => console.log("Atualizado"));
+    } else {
+      servvice.salvar(produto).then((produtoResposta) => {
+        console.log("retorno", produtoResposta);
+        setId(produtoResposta.id ?? "");
+        setCadastro(produtoResposta.cadastro ?? "");
+      });
+    }
   };
 
   return (
     <Layout titulo="Cadastro de Produtos">
-      <div className="columns">
-        <Input
-          id="inputId"
-          label="Código"
-          columnClasses="is-half"
-          value={id}
-          disabled
-        />
-        <Input
-          id="inputCadastro"
-          label="Data de Cadastro"
-          columnClasses="is-half"
-          value={cadastro}
-          disabled
-        />
-      </div>
+      {id && (
+        <div className="columns">
+          <Input
+            id="inputId"
+            label="Código"
+            columnClasses="is-half"
+            value={id}
+            disabled
+          />
+          <Input
+            id="inputCadastro"
+            label="Data de Cadastro"
+            columnClasses="is-half"
+            value={cadastro}
+            disabled
+          />
+        </div>
+      )}
       <div className="columns">
         <Input
           id="inputSku"
@@ -62,6 +71,8 @@ export const CadastroProduto: React.FC = () => {
           columnClasses="is-half"
           onChange={setPreco}
           value={preco}
+          currency
+          maxLength={16}
           placeholder="Digite o Preço"
         />
       </div>
@@ -95,7 +106,7 @@ export const CadastroProduto: React.FC = () => {
       <div className="field is-grouped">
         <div className="control">
           <button className="button" onClick={submit}>
-            Salvar
+            {id ? "Atualizar" : "Salvar"}
           </button>
         </div>
         <div className="control">
