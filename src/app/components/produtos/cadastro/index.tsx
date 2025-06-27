@@ -1,10 +1,19 @@
 "use client";
 import { useState } from "react";
 import { Layout } from "app/components/layout";
-import { Input } from "app/components/common";
+import { Input, Message } from "app/components/common";
 import { useProdutoService } from "app/services/produto.service";
 import { Produto } from "app/models/produtos";
 import { convertBigEmDecimal } from "app/util/money";
+import { Alert } from "app/components/common/message";
+import * as yup from "yup";
+
+const validationSchema = yup.object().shape({
+  sku: yup.string().required(),
+  nome: yup.string().required(),
+  descricao: yup.string().required(),
+  preco: yup.number().required(),
+});
 
 export const CadastroProduto: React.FC = () => {
   const servvice = useProdutoService();
@@ -14,6 +23,7 @@ export const CadastroProduto: React.FC = () => {
   const [descricao, setDescricao] = useState("");
   const [id, setId] = useState<string>("");
   const [cadastro, setCadastro] = useState<string>("");
+  const [message, setMessage] = useState<Array<Alert>>([]);
 
   const submit = () => {
     const produto: Produto = {
@@ -26,18 +36,31 @@ export const CadastroProduto: React.FC = () => {
     };
 
     if (id) {
-      servvice.atualizar(produto).then((response) => console.log("Atualizado"));
+      servvice.atualizar(produto).then((response) => {
+        setMessage([
+          {
+            texto: "Produto Atualizado com sucesso",
+            tipo: "success",
+          },
+        ]);
+      });
     } else {
       servvice.salvar(produto).then((produtoResposta) => {
         console.log("retorno", produtoResposta);
         setId(produtoResposta.id ?? "");
         setCadastro(produtoResposta.cadastro ?? "");
+        setMessage([
+          {
+            texto: "Produto Salvo com sucesso",
+            tipo: "success",
+          },
+        ]);
       });
     }
   };
 
   return (
-    <Layout titulo="Cadastro de Produtos">
+    <Layout titulo="Cadastro de Produtos" mensagens={message}>
       {id && (
         <div className="columns">
           <Input
