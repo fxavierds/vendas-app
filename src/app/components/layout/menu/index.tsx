@@ -5,7 +5,7 @@ export const Menu: React.FC = () => {
     <aside className="colum is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
       <p className="menu-label is-hidden-touch">Minhas Vendas</p>
       <MenuItem href="/" label="Home" />
-      <MenuItem href="/cadastros/produtos" label="Produto" />
+      <MenuItem href="/consultas/produtos" label="Produto" />
       <MenuItem href="/" label="Config" />
       <MenuItem href="/" label="Sair" />
     </aside>
