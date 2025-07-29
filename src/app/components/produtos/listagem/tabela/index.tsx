@@ -2,9 +2,15 @@ import { Produto } from "app/models/produtos";
 
 interface TabelaProps {
   produtos: Array<Produto>;
+  onEdit: (produto: any) => void;
+  onDelete: (produto: any) => void;
 }
 
-export const TabelaProdutos: React.FC<TabelaProps> = ({ produtos }) => {
+export const TabelaProdutos: React.FC<TabelaProps> = ({
+  produtos,
+  onDelete,
+  onEdit,
+}) => {
   return (
     <table className="table is-striped">
       <thead>
@@ -18,7 +24,12 @@ export const TabelaProdutos: React.FC<TabelaProps> = ({ produtos }) => {
       </thead>
       <tbody>
         {produtos.map((produto) => (
-          <ProdutoRow key={produto.id} produto={produto} />
+          <ProdutoRow
+            onDelete={onDelete}
+            onEdit={onEdit}
+            key={produto.id}
+            produto={produto}
+          />
         ))}
       </tbody>
     </table>
@@ -30,9 +41,12 @@ interface ProdutoRowProps {
   onEdit: (produto: any) => void;
   onDelete: (produto: any) => void;
 }
-}
 
-const ProdutoRow: React.FC<ProdutoRowProps> = ({ produto }) => {
+const ProdutoRow: React.FC<ProdutoRowProps> = ({
+  produto,
+  onDelete,
+  onEdit,
+}) => {
   return (
     <tr>
       <td>{produto.id}</td>
@@ -40,10 +54,16 @@ const ProdutoRow: React.FC<ProdutoRowProps> = ({ produto }) => {
       <td>{produto.nome}</td>
       <td>{produto.preco}</td>
       <td>
-        <button className="button is-success is-rounded is-small">
+        <button
+          onClick={(e) => onEdit(produto)}
+          className="button is-success is-rounded is-small"
+        >
           Editar
         </button>
-        <button className="button is-danger is-rounded is-small">
+        <button
+          onClick={(e) => onDelete(produto)}
+          className="button is-danger is-rounded is-small"
+        >
           Deletar
         </button>
       </td>

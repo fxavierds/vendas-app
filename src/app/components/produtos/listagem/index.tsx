@@ -8,12 +8,24 @@ import { Loader } from "app/components/common";
 import useSWR from "swr";
 import { httpClient } from "app/http";
 import { AxiosResponse } from "axios";
+import { useRouter } from "next/navigation";
 
 export const ListagemProdutos: React.FC = () => {
+  const router = useRouter();
   const { data: result, error } = useSWR<AxiosResponse<Produto[]>>(
     "api/produtos",
     (url: string) => httpClient.get(url)
   );
+
+  const editar = (produto: Produto) => {
+    const url = `/cadastros/produtos?id=${produto.id}`;
+    router.push(url);
+  };
+
+  const excluir = (produto: Produto) => {
+    const url = `/cadastros/produtos?id=${produto.id}`;
+    router.push(url);
+  };
 
   return (
     <Layout titulo="Produtos">
@@ -22,7 +34,11 @@ export const ListagemProdutos: React.FC = () => {
       </Link>
       <br />
       <Loader show={!result} />
-      <TabelaProdutos produtos={result?.data || []}></TabelaProdutos>
+      <TabelaProdutos
+        onDelete={excluir}
+        onEdit={editar}
+        produtos={result?.data || []}
+      ></TabelaProdutos>
     </Layout>
   );
 };

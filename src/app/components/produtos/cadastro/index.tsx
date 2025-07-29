@@ -4,10 +4,12 @@ import { Layout } from "app/components/layout";
 import { Input, Message } from "app/components/common";
 import { useProdutoService } from "app/services/produto.service";
 import { Produto } from "app/models/produtos";
-import { convertBigEmDecimal } from "app/util/money";
+import { convertBigEmDecimal, formatReal } from "app/util/money";
 import { Alert } from "app/components/common/message";
 import * as yup from "yup";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const msgObrigatorio = "Campo obrigatório";
 
@@ -33,15 +35,31 @@ interface formErros {
 }
 
 export const CadastroProduto: React.FC = () => {
-  const servvice = useProdutoService();
+  const service = useProdutoService();
   const [sku, setSku] = useState("");
   const [preco, setPreco] = useState("");
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState("");
   const [cadastro, setCadastro] = useState<string>("");
   const [message, setMessage] = useState<Array<Alert>>([]);
   const [errors, setErrors] = useState<formErros>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryId = searchParams.get("id");
+
+  useEffect(() => {
+    if (queryId) {
+      service.carregarProduto(queryId).then((produtoEncontrado) => {
+        setId(produtoEncontrado.id ?? "");
+        setSku(produtoEncontrado.sku ?? "");
+        setDescricao(produtoEncontrado.descricao ?? "");
+        setNome(produtoEncontrado.nome ?? "");
+        setPreco(formatReal(`${produtoEncontrado.preco}`));
+        setCadastro(produtoEncontrado.cadastro ?? "");
+      });
+    }
+  }, [queryId]);
 
   const submit = () => {
     const produto: Produto = {
@@ -57,7 +75,7 @@ export const CadastroProduto: React.FC = () => {
       .validate(produto)
       .then((obj) => {
         if (id) {
-          servvice.atualizar(produto).then((response) => {
+          service.atualizar(produto).then((response) => {
             setMessage([
               {
                 texto: "Produto Atualizado com sucesso",
@@ -66,7 +84,7 @@ export const CadastroProduto: React.FC = () => {
             ]);
           });
         } else {
-          servvice.salvar(produto).then((produtoResposta) => {
+          service.salvar(produto).then((produtoResposta) => {
             setErrors([]);
             setId(produtoResposta.id ?? "");
             setCadastro(produtoResposta.cadastro ?? "");
