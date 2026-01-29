@@ -1,5 +1,6 @@
 import { Cliente } from "app/models/clientes";
 import { useFormik } from "formik";
+import { Input } from "app/components/common";
 
 interface ClienteFormProps {
   cliente: Cliente;
@@ -22,18 +23,88 @@ export const ClienteForm: React.FC<ClienteFormProps> = ({
   onSubmit,
 }) => {
   const formik = useFormik<Cliente>({
-    initialValues: { ...cliente, ...formScheme },
+    initialValues: { ...formScheme, ...cliente },
     onSubmit,
   });
   return (
     <form onSubmit={formik.handleSubmit}>
-      <input
-        value={formik.values.nome}
-        onChange={formik.handleChange}
-        id="nome"
-        name="nome"
-      />
-      <button type="submit">Enviar</button>
+      {formik.values.id && (
+        <div className="columns">
+          <Input
+            id="id"
+            name="id"
+            disabled
+            value={formik.values.id}
+            onChange={formik.handleChange}
+            label="Código Cliente"
+          ></Input>
+          <Input
+            id="dataCadastro"
+            name="dataCadastro"
+            disabled
+            value={formik.values.cadastro}
+            onChange={formik.handleChange}
+            label="Data de Cadastro"
+          ></Input>
+        </div>
+      )}
+      <div className="columns">
+        <Input
+          id="nome"
+          name="nome"
+          value={formik.values.nome}
+          onChange={formik.handleChange}
+          label="Nome"
+        ></Input>
+      </div>
+      <div className="columns">
+        <Input
+          id="cpf"
+          name="cpf"
+          value={formik.values.cpf}
+          onChange={formik.handleChange}
+          label="CPF"
+        ></Input>
+        <Input
+          id="dataNascimento"
+          name="dataNascimento"
+          value={formik.values.dataNascimento}
+          onChange={formik.handleChange}
+          label="Data de Nascimento"
+        ></Input>
+      </div>
+      <div className="columns">
+        <Input
+          id="endereco"
+          name="endereco"
+          value={formik.values.endereco}
+          onChange={formik.handleChange}
+          label="Endereço"
+        ></Input>
+      </div>
+      <div className="columns">
+        <Input
+          id="email"
+          name="email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          label="Email"
+        ></Input>
+        <Input
+          id="telefone"
+          name="telefone"
+          value={formik.values.telefone}
+          onChange={formik.handleChange}
+          label="Telefone"
+        ></Input>
+      </div>
+      <div className="field is-grouped">
+        <div className="control is-link">
+          <button className="button" type="submit">
+            {formik.values.id ? "Atualizar" : "Salvar"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };

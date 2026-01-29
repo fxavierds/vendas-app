@@ -6,7 +6,7 @@ interface inputProps extends InputHTMLAttributes<HTMLElement> {
   onChange?: (value: any) => void;
   label: string;
   columnClasses?: string;
-  currency?: boolean;
+  formatter?: (value: string) => string;
   error?: string;
 }
 
@@ -16,19 +16,25 @@ export const Input: React.FC<inputProps> = ({
   columnClasses,
   value,
   id,
-  currency,
+  formatter,
   error,
   ...inputProps
 }: inputProps) => {
-  const onInputChange = (event: { target: { value: any } }) => {
-    let value = event.target.value;
-    if (value && currency) {
-      value = formatReal(value);
-    }
-    if (onChange) {
-      onChange(value);
-    }
+  const onInputChange = (event: any) => {
+    const value = event.target.value;
+    const name = event.target.name;
+
+    const formattedValue = (formatter && formatter(value as string)) || value;
+
+    onChange?.({
+      ...event,
+      target: {
+        name,
+        value: formattedValue,
+      },
+    });
   };
+
   return (
     <div className={`field column ${columnClasses}`}>
       <label className="label" htmlFor={id}>
@@ -46,4 +52,8 @@ export const Input: React.FC<inputProps> = ({
       </div>
     </div>
   );
+};
+
+export const InputMoney: React.FC<inputProps> = (props: inputProps) => {
+  return <Input {...props} formatter={formatReal} />;
 };

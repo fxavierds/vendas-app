@@ -1,5 +1,5 @@
 import { Loader } from './loader/loader';
-import { Input } from './input';
+import { Input, InputMoney } from './input';
 import { Message } from './message';
 
-export { Loader, Input, Message };
+export { Loader, Input, Message, InputMoney };
