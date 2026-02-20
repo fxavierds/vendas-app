@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@4us-dev/utils": "^0.0.15",
     "axios": "^1.9.0",
     "bulma": "^1.0.3",
     "formik": "^2.4.6",

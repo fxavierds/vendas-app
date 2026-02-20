@@ -1,5 +1,8 @@
 import { InputHTMLAttributes } from "react";
 import { formatReal } from "app/util/money";
+import { FormatUtils } from "@4us-dev/utils";
+
+const formatUtils = new FormatUtils();
 
 interface inputProps extends InputHTMLAttributes<HTMLElement> {
   id: string;
@@ -56,4 +59,51 @@ export const Input: React.FC<inputProps> = ({
 
 export const InputMoney: React.FC<inputProps> = (props: inputProps) => {
   return <Input {...props} formatter={formatReal} />;
+};
+
+export const InputCpf: React.FC<inputProps> = (props: inputProps) => {
+  return <Input {...props} formatter={formatUtils.formatCPF} />;
+};
+
+export const InputTelefone: React.FC<inputProps> = (props: inputProps) => {
+  return <Input {...props} formatter={formatUtils.formatPhone} />;
+};
+
+export const InputDate: React.FC<inputProps> = (props: inputProps) => {
+  const formatData = (value: string) => {
+    if (!value) {
+      return " ";
+    }
+
+    const data = formatUtils.formatOnlyIntegers(value);
+    const size = data.length;
+
+    if (size <= 2) {
+      return data;
+    }
+
+    if (size <= 4) {
+      console.log("data", data.substring(2, 3));
+      return data.substring(0, 2) + "/" + data.substring(2, 4);
+    }
+
+    if (size <= 6) {
+      return (
+        data.substring(0, 2) +
+        "/" +
+        data.substring(2, 4) +
+        "/" +
+        data.substring(4, 8)
+      );
+    }
+
+    return (
+      data.substring(0, 2) +
+      "/" +
+      data.substring(2, 4) +
+      "/" +
+      data.substring(4, 8)
+    );
+  };
+  return <Input {...props} maxLength={10} formatter={formatData} />;
 };

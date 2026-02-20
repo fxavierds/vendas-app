@@ -3,6 +3,7 @@ import { Layout } from "app/components/layout";
 import { ClienteForm } from "./form";
 import { Cliente } from "app/models/clientes";
 import { useState } from "react";
+import { useClienteService } from "app/services/cliente.service";
 
 export const CadastroCliente: React.FC = () => {
   const [cliente, setCliente] = useState<Cliente>({});
