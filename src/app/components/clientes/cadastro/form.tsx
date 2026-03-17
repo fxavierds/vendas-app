@@ -13,7 +13,7 @@ interface ClienteFormProps {
 }
 
 const formScheme: Cliente = {
-  cadastro: "",
+  dataCadastro: "",
   cpf: "",
   dataNascimento: "",
   email: "",
@@ -30,6 +30,7 @@ export const ClienteForm: React.FC<ClienteFormProps> = ({
   const formik = useFormik<Cliente>({
     initialValues: { ...formScheme, ...cliente },
     onSubmit,
+    enableReinitialize: true,
   });
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -47,7 +48,7 @@ export const ClienteForm: React.FC<ClienteFormProps> = ({
             id="dataCadastro"
             name="dataCadastro"
             disabled
-            value={formik.values.cadastro}
+            value={formik.values.dataCadastro}
             onChange={formik.handleChange}
             label="Data de Cadastro"
           ></Input>

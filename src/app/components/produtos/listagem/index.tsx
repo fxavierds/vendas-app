@@ -18,12 +18,13 @@ export const ListagemProdutos: React.FC = () => {
   const router = useRouter();
   const { data: result, error } = useSWR<AxiosResponse<Produto[]>>(
     "api/produtos",
-    (url: string) => httpClient.get(url)
+    (url: string) => httpClient.get(url),
   );
 
   const [lista, setLista] = useState<Produto[]>([]);
 
   useEffect(() => {
+    console.log("url", result);
     setLista(result?.data || []);
   }, [result]);
 
@@ -36,7 +37,7 @@ export const ListagemProdutos: React.FC = () => {
     service.deletar(produto.id).then((response) => {
       setMessage([{ tipo: "success", texto: "Produto excluído com sucesso." }]);
       const listaAlterada: Produto[] = lista?.filter(
-        (p) => p.id !== produto.id
+        (p) => p.id !== produto.id,
       );
       setLista(listaAlterada);
     });

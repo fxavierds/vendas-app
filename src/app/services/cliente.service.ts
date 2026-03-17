@@ -6,12 +6,15 @@ const resourceUrl: string = '/api/clientes';
 export const useClienteService = () => {
     const salvar = async (cliente: Cliente): Promise<Cliente> => {
         const response = await httpClient.post<Cliente>(resourceUrl, cliente);
+         console.log("salvar", response);
         return response.data;
     }
 
-    const atualizar = async (cliente: Cliente): Promise<void> => {
+    const atualizar = async (cliente: Cliente): Promise<Cliente> => {
         const url: string = `${resourceUrl}/${cliente.id}`;
-        await httpClient.put(url, cliente);
+        const response = await httpClient.put(url, cliente);
+        console.log("put", response);
+        return response.data;
     }
 
     const carregarCliente = async (id: any): Promise<Cliente> => {
