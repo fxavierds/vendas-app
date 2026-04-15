@@ -4,19 +4,24 @@ import { ClienteForm } from "./form";
 import { Cliente } from "app/models/clientes";
 import { useState } from "react";
 import { useClienteService } from "app/services/cliente.service";
+import { Alert } from "app/components/common/message";
 
 export const CadastroCliente: React.FC = () => {
   const [cliente, setCliente] = useState<Cliente>({});
+  const [mensagem, setMensagem] = useState<Array<Alert>>([]);
   const service = useClienteService();
 
   const handleSubmit = (cliente: Cliente) => {
-    console.log(cliente);
-
     if (cliente.id) {
       service
         .atualizar(cliente)
         .then((response) => {
-          console.log("Cliente atualizado com sucesso!", response);
+          setMensagem([
+            {
+              texto: "Cliente atualizado com sucesso!",
+              tipo: "success",
+            },
+          ]);
           setCliente(response);
         })
         .catch((error) => {
@@ -24,13 +29,18 @@ export const CadastroCliente: React.FC = () => {
         });
     } else {
       service.salvar(cliente).then((response) => {
-        console.log("Cliente salvo com sucesso!", response);
+        setMensagem([
+          {
+            texto: "Cliente salvo com sucesso!",
+            tipo: "success",
+          },
+        ]);
         setCliente(response);
       });
     }
   };
   return (
-    <Layout titulo="Cliente">
+    <Layout titulo="Cliente" mensagens={mensagem}>
       <ClienteForm cliente={cliente} onSubmit={handleSubmit} />
     </Layout>
   );

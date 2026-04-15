@@ -17,7 +17,7 @@ export const ListagemProdutos: React.FC = () => {
   const [message, setMessage] = useState<Array<Alert>>([]);
   const router = useRouter();
   const { data: result, error } = useSWR<AxiosResponse<Produto[]>>(
-    "api/produtos",
+    "/api/produtos",
     (url: string) => httpClient.get(url),
   );
 
