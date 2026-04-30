@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/luna-blue/theme.css";
 import "bulma/css/bulma.css";
 import "app/components/common/loader/loader.css";
 
