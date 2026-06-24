@@ -1,5 +1,6 @@
 import { httpClient } from "app/http";
 import { Cliente } from "app/models/clientes";
+import { Page } from "app/models/common/page"
 
 const resourceUrl: string = '/api/clientes';
 
@@ -28,7 +29,18 @@ export const useClienteService = () => {
          await httpClient.delete(url)
     }
 
+    const find =  async (
+        nome: string = '',
+        cpf: string = '',
+        page: number = 0,
+        size: number = 10
+    ) : Promise<Page<Cliente>> => {
+        const url = `${resourceUrl}?nome=${nome}&cpf=${cpf}&page=${page}&size=${size}`
+        const response = await httpClient.get<Page<Cliente>>(url)
+        return response.data;
+    }
+
     return {
-        salvar, atualizar, carregarCliente, deletar
+        salvar, atualizar, carregarCliente, deletar, find
     }
 }

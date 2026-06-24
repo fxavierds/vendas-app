@@ -4,31 +4,27 @@ import { Input, InputCpf } from "app/components/common";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { Cliente } from "app/models/clientes";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTablePageEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Page } from "app/models/common/page";
+import { useClienteService } from "app/services/cliente.service";
 
 interface ClienteConsultaForm {
   nome?: string;
   cpf?: string;
 }
 export const ListagemClientes: React.FC = () => {
-  const [clientes, setClientes] = useState<Cliente[]>([
-    {
-      id: "1",
-      nome: "João",
-      cpf: "123.456.789-00",
-      email: "joao@gmail.com",
-    },
-    {
-      id: "2",
-      nome: "Jose",
-      cpf: "123.456.789-00",
-      email: "jose@gmail.com",
-    },
-  ]);
+  const clienteService = useClienteService();
+  const [clientes, setClientes] = useState<Page<Cliente>>({
+    content: [],
+    first: 0,
+    number: 0,
+    size: 0,
+    totalElements: 0,
+  });
 
   const handleSubmit = (filtro: ClienteConsultaForm) => {
-    console.log(filtro);
+    handlePageChange(null);
   };
 
   const formik = useFormik<ClienteConsultaForm>({
@@ -38,6 +34,19 @@ export const ListagemClientes: React.FC = () => {
     },
     onSubmit: handleSubmit,
   });
+
+  const handlePageChange = (event: DataTablePageEvent) => {
+    clienteService
+      .find(
+        formik.values.nome ?? "",
+        formik.values.cpf ?? "",
+        event.page ?? 0,
+        event.rows ?? 10,
+      )
+      .then((response) => {
+        setClientes(response);
+      });
+  };
 
   return (
     <Layout titulo="Consulta Clientes">
@@ -62,15 +71,28 @@ export const ListagemClientes: React.FC = () => {
         </div>
         <div className="field is-grouped">
           <div className="control is-link">
-            <button className="button is-success" type="submit">
+            <button
+              className="button is-success"
+              type="submit"
+              onClick={handleSubmit}
+            >
               Consultar
             </button>
           </div>
         </div>
       </form>
+      <br />
       <div className="columns">
         <div className="is-full">
-          <DataTable value={clientes}>
+          <DataTable
+            value={clientes.content}
+            totalRecords={clientes.totalElements}
+            lazy={true}
+            paginator
+            first={clientes.first}
+            rows={clientes.size}
+            onPage={handlePageChange}
+          >
             <Column field="id" header="Código"></Column>
             <Column field="nome" header="Nome"></Column>
             <Column field="cpf" header="CPF"></Column>
